@@ -14,8 +14,13 @@ from django import forms
 def search(request):
     if request.method == "POST":
         searched = request.POST['searched']
-        return render(request, 'search.html', {'searched': searched})
+        searched = Product.objects.filter(name__icontains=searched)
 
+        if  not searched:
+             messages.success(request, "That Product Does Not Exist....Please try again")
+             return render(request, 'search.html', {})
+        else:
+             return render(request, 'search.html', {'searched':searched})	
     else:
         return render(request, 'search.html', {})	
      
